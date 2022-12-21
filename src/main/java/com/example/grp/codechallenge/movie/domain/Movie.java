@@ -43,6 +43,12 @@ public class Movie {
 	@Type(type="yes_no")
 	private Boolean winner;
 	
+	@ManyToMany(cascade = { CascadeType.ALL })
+    @JoinTable(name = "MOVIE_PRODUCERS"
+    	, joinColumns = { @JoinColumn(name = "MOVIE_ID") }
+    	, inverseJoinColumns = { @JoinColumn(name = "PRODUCER_ID") } )
+	private List<Producer> producers;
+
 	public UUID getId() {
 		return id;
 	}
@@ -75,6 +81,14 @@ public class Movie {
 		this.studios = studios;
 	}
 
+	public List<Producer> getProducers() {
+		return producers;
+	}
+	
+	public void setProducers(List<Producer> producers) {
+		this.producers = producers;
+	}
+	
 	public Boolean getWinner() {
 		return winner;
 	}
