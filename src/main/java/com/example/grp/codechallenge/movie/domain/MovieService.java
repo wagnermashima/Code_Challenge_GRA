@@ -1,0 +1,43 @@
+package com.example.grp.codechallenge.movie.domain;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.example.grp.codechallenge.movie.repository.MovieRepository;
+import com.example.grp.codechallenge.producer.domain.ProducerService;
+
+@Controller
+public class MovieService {
+
+	@Autowired
+	private MovieRepository movieRepository;
+	
+	@Autowired
+	private ProducerService producerService;
+
+	@Transactional
+	public void save(Movie movie) {
+		movieRepository.save(movie);
+	}
+
+	public Long countMovies() {
+		return movieRepository.count();
+	}
+
+	@Transactional
+	public void importMoviesProducers(MovieProducers movieProducers) {
+		Movie movie = new Movie();
+		movie.setYear(movieProducers.getYear());
+		movie.setTitle(movieProducers.getTitle());
+		movie.setStudios(movieProducers.getStudios());
+		movie.setWinner(movieProducers.getWinner());
+		save(movie);
+		
+		producerService.getOrCreateProducers(movieProducers.getProducers()).forEach(producer -> {
+			producer.add(movie);
+			producerService.save(producer);
+		});
+		
+	}
+}
