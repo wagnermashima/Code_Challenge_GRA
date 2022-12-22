@@ -49,7 +49,7 @@ public class ProducerRepository {
 		hql.append("select prod.name ");
 		hql.append(", movi.title ");
 		hql.append(", movi.year ");
-		hql.append("from Movie movi");
+		hql.append("from Movie movi ");
 		hql.append("inner join movi.producers prod ");
 		hql.append("where ( select count(movi2) from Movie movi2 ");
 		hql.append("		inner join movi2.producers prod2 ");

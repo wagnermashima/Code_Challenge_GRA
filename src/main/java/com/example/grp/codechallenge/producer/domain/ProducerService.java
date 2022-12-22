@@ -1,5 +1,7 @@
 package com.example.grp.codechallenge.producer.domain;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,19 +41,50 @@ public class ProducerService {
 
 	public ProducerResult getAwards() {
 		ProducerResult result = new ProducerResult();
-		result.setMin(getMinimumPrizeInterval());
-		result.setMin(getMaximumPrizeInterval());
+		List<ProducerWinner> winners = producerRepository.findWinnersMoreThanOnce();
+		List<PrizeInterval> prizeIntervals = createPrizeIntervals(winners);
+		result.setMin(filter(getMinimumInterval(prizeIntervals), prizeIntervals));
+		result.setMax(filter(getMaximumInterval(prizeIntervals), prizeIntervals));
 		return result;
 	}
 
-	private List<PrizeInterval> getMaximumPrizeInterval() {
-		// TODO Auto-generated method stub
-		return null;
+	private List<PrizeInterval> createPrizeIntervals(List<ProducerWinner> winners) {
+		List<PrizeInterval> result = new ArrayList<>();
+		for (Iterator<ProducerWinner> iterator = winners.iterator(); iterator.hasNext();) {
+			ProducerWinner producerWinner = iterator.next();
+			
+			ProducerWinner other = winners.stream().filter(w -> shouldApply(producerWinner, w)).findFirst().orElse(null);
+			if (other == null) continue;
+			
+			PrizeInterval prizeInterval = new PrizeInterval();
+			prizeInterval.setPreviousWin(producerWinner.getYear());
+			prizeInterval.setFollowingWin(other.getYear());
+			prizeInterval.setProducer(producerWinner.getName());
+			prizeInterval.setInterval(other.getYear() - producerWinner.getYear());
+			
+			result.add(prizeInterval);
+			
+			iterator.remove();
+		}
+		return result;
 	}
 
-	private List<PrizeInterval> getMinimumPrizeInterval() {
-		// TODO Auto-generated method stub
-		return null;
+	private boolean shouldApply(ProducerWinner base, ProducerWinner other) {
+		if (!base.getName().equals(other.getName())) return false;
+		return !base.getTitle().equals(other.getTitle());
+	}
+
+	private int getMaximumInterval(List<PrizeInterval> prizeIntervals) {
+		return prizeIntervals.stream().mapToInt(PrizeInterval::getInterval).max().orElse(0);
+	}
+
+	private int getMinimumInterval(List<PrizeInterval> prizeIntervals) {
+		return prizeIntervals.stream().mapToInt(PrizeInterval::getInterval).min().orElse(0);
+	}
+	
+	private List<PrizeInterval> filter(int interval, List<PrizeInterval> prizeIntervals) {
+		if (interval == 0) return new ArrayList<>();
+		return prizeIntervals.stream().filter(i -> i.getInterval().equals(interval)).collect(Collectors.toList());
 	}
 
 }
