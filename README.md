@@ -12,5 +12,5 @@ Após rodar o install, todos os testes são executados:
 
 Resultado final(teste via postman):
 
-![result](https://github.com/wagnermashima/Code_Challenge_GRA/blob/main/images/result.png)
+![result](https://github.com/wagnermashima/Code_Challenge_GRA/blob/main/images/new_result.png)
 
