@@ -72,4 +72,9 @@ public class ProducerRepository {
 		return winner;
 	}
 
+	public void clear() {
+		Query delete = entityManager.createQuery("delete from Producer");
+		delete.executeUpdate();
+	}
+
 }

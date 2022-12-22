@@ -87,4 +87,9 @@ public class ProducerService {
 		return prizeIntervals.stream().filter(i -> i.getInterval().equals(interval)).collect(Collectors.toList());
 	}
 
+	@Transactional
+	public void clear() {
+		producerRepository.clear();
+	}
+
 }

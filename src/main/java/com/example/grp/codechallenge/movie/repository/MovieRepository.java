@@ -38,4 +38,9 @@ public class MovieRepository {
 		return (Long) query.getSingleResult();
 	}
 
+	public void clear() {
+		Query delete = entityManager.createQuery("delete from Movie");
+		delete.executeUpdate();
+	}
+
 }

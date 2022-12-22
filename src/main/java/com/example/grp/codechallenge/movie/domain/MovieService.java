@@ -41,4 +41,9 @@ public class MovieService {
 		
 		save(movie);
 	}
+
+	@Transactional
+	public void clear() {
+		movieRepository.clear();
+	}
 }

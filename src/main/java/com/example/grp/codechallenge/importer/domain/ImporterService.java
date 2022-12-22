@@ -5,12 +5,12 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.stereotype.Component;
 
 import com.example.grp.codechallenge.movie.domain.MovieService;
+import com.example.grp.codechallenge.producer.domain.ProducerService;
 
-@Controller
+@Component
 public class ImporterService {
 	
 	@Autowired
@@ -19,9 +19,13 @@ public class ImporterService {
 	@Autowired
 	private MovieService movieService;
 	
+	@Autowired
+	private ProducerService producerService;
+	
 	@PostConstruct
-	@Transactional
 	public void importMovies() {
+		movieService.clear();
+		producerService.clear();
 		List<String> lines = fileReader.readFile();
 		MovieProducersTransformer transformer = new MovieProducersTransformer();
 		lines.stream().map(l -> transformer.transform(l)).forEach(m -> movieService.importMoviesProducers(m));
