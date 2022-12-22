@@ -55,6 +55,7 @@ public class ProducerRepository {
 		hql.append("		inner join movi2.producers prod2 ");
 		hql.append("		where movi2.winner = true ");
 		hql.append("		and prod2 = prod ) > 1 ");
+		hql.append("and movi.winner = true ");
 		hql.append("order by prod.name, movi.year ");
 		Query query = entityManager.createQuery(hql.toString());
 		return convertProducerWinner(query.getResultList());

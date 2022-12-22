@@ -29,15 +29,12 @@ class ProducerRestControllerTest {
 		PrizeInterval test = minimum.get(0);
 		assertEquals(1, test.getInterval());
 		
-		test = minimum.get(1);
-		assertEquals(1, test.getInterval());
-
 		List<PrizeInterval> max = result.getMax();
 		
 		assertFalse(max.isEmpty());
 		
 		test = max.get(0);
-		assertEquals(14, test.getInterval());
+		assertEquals(13, test.getInterval());
 	}
 	
 }
